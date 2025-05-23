@@ -1,4 +1,4 @@
-import { Sparkles, Code, Coins, MessageSquare, Calculator, Palette, Zap, Trophy, Cpu, Shield, Rocket, AlertCircle, Star, Flame, Crown, Gift, Gamepad2, Volume2, VolumeX, Lock, Clock, Users, TreePine, Gavel, Vote, PiggyBank, Award, BarChart3 } from 'lucide-react';
+import { Coins, MessageSquare, Calculator, Palette, Zap, Trophy, Shield, Lock, Clock, Users, TreePine, Vote, PiggyBank, Award, BarChart3 } from 'lucide-react';
 import { ContractType, RarityColors, ContractRarity } from '../types';
 
 // Enhanced contract types with more variety and rarity - EXPANDED TO 17 BROWSER-COMPILABLE CONTRACTS
