@@ -66,7 +66,7 @@ compilationRouter.post('/contract', async (req: Request, res: Response) => {
       };
       
       logger.success('Compilation successful for contract:', compilationRequest.contractName);
-      res.json(response);
+      return res.json(response);
     } else {
       const response: ApiResponse = {
         success: false,
@@ -80,7 +80,7 @@ compilationRouter.post('/contract', async (req: Request, res: Response) => {
       };
       
       logger.error('Compilation failed for contract:', compilationRequest.contractName, result.error);
-      res.status(400).json(response);
+      return res.status(400).json(response);
     }
 
   } catch (error) {
@@ -93,7 +93,7 @@ compilationRouter.post('/contract', async (req: Request, res: Response) => {
       timestamp: new Date().toISOString()
     };
     
-    res.status(500).json(response);
+    return res.status(500).json(response);
   }
 });
 

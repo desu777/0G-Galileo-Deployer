@@ -64,7 +64,7 @@ VITE_APP_VERSION=1.0.0
 
 ### 3.3 Build frontend
 ```bash
-npm run build
+npm run build:prod
 ```
 
 ## 🔨 Krok 4: Konfiguracja Compiler
@@ -97,15 +97,15 @@ COMPILATION_TIMEOUT=30000
 
 ### 4.3 Build compiler
 ```bash
-npm run build
+npm run build:prod
 ```
 
 ## 🚀 Krok 5: PM2 Configuration
 
-### 5.1 Utwórz ecosystem.config.js
+### 5.1 Utwórz ecosystem.config.cjs
 ```bash
 cd /var/www/deployer
-nano ecosystem.config.js
+nano ecosystem.config.cjs
 ```
 
 **Zawartość:**
@@ -137,9 +137,21 @@ module.exports = {
 
 ### 5.2 Uruchom aplikacje
 ```bash
-pm2 start ecosystem.config.js
+pm2 start ecosystem.config.cjs
 pm2 save
 pm2 startup
+```
+
+**Ważne:** Jeśli frontend uruchamia się na złym porcie (4173), zatrzymaj PM2, przebuduj i uruchom ponownie:
+```bash
+# Zatrzymaj aplikacje
+pm2 stop all
+
+# Przebuduj frontend z nową konfiguracją portów
+npm run build:prod
+
+# Uruchom ponownie
+pm2 start ecosystem.config.cjs
 ```
 
 ## 🌐 Krok 6: Nginx Configuration
@@ -196,25 +208,7 @@ server {
 
     # SSL certificates (będą dodane przez Certbot)
     
-    # CORS headers
-    add_header 'Access-Control-Allow-Origin' 'https://deployer.desu0g.xyz' always;
-    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
-    add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, X-Requested-With' always;
-    add_header 'Access-Control-Allow-Credentials' 'true' always;
-
     location / {
-        # Handle preflight requests
-        if ($request_method = 'OPTIONS') {
-            add_header 'Access-Control-Allow-Origin' 'https://deployer.desu0g.xyz';
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, X-Requested-With';
-            add_header 'Access-Control-Allow-Credentials' 'true';
-            add_header 'Access-Control-Max-Age' 1728000;
-            add_header 'Content-Type' 'text/plain; charset=utf-8';
-            add_header 'Content-Length' 0;
-            return 204;
-        }
-
         proxy_pass http://localhost:3999;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -316,13 +310,13 @@ git pull origin main
 # Update frontend
 echo "🔨 Building frontend..."
 npm install
-npm run build
+npm run build:prod
 
 # Update compiler
 echo "🔨 Building compiler..."
 cd compiler
 npm install
-npm run build
+npm run build:prod
 cd ..
 
 # Restart applications
@@ -345,7 +339,7 @@ echo "🔧 Compiler: https://compiler.desu0g.xyz"
 - [ ] Repo sklonowane do `/var/www/deployer`
 - [ ] Frontend `.env` skonfigurowany z WalletConnect PROJECT_ID
 - [ ] Compiler `.env` skonfigurowany
-- [ ] PM2 ecosystem.config.js utworzony
+- [ ] PM2 ecosystem.config.cjs utworzony
 - [ ] Obie aplikacje uruchomione przez PM2
 - [ ] Nginx konfiguracje utworzone dla obu domen
 - [ ] SSL certyfikaty wygenerowane dla obu domen

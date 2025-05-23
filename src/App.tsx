@@ -66,9 +66,6 @@ function App() {
     const spinInterval = setInterval(() => {
       elapsed += interval;
       
-      // Slow down towards the end for dramatic effect
-      const progress = elapsed / duration;
-      
       setSpinResult([
         CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
         CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
