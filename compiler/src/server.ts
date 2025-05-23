@@ -17,10 +17,14 @@ app.use(cors({
     process.env.FRONTEND_URL || 'http://localhost:3998',
     'http://localhost:3998',
     'http://localhost:5173', // Keep for local development
-    'https://deployer.desu0g.xyz' // Production domain
+    'https://deployer.desu0g.xyz', // Production frontend domain
+    'https://compiler.desu0g.xyz', // Compiler domain (if needed)
+    'http://deployer.desu0g.xyz', // HTTP fallback
+    'http://compiler.desu0g.xyz' // HTTP fallback
   ],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true
 }));
 
 // Body parsing middleware
