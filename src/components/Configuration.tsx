@@ -103,6 +103,46 @@ const Configuration: React.FC<ConfigurationProps> = ({
       'rewardRate': '💎',
       'minimumStake': '💰',
       'lockupPeriod': '🔒',
+
+      // Escrow
+      'seller': '🏪',
+      'deadlineInHours': '⏰',
+
+      // Vesting Wallet
+      'beneficiary': '👤',
+      'durationInDays': '📅',
+      'revocable': '🔄',
+
+      // Timelock Vault
+      'unlockTimeInDays': '🔐',
+
+      // Merkle Airdrop
+      'merkleRoot': '🌳',
+      'claimPeriodInDays': '📅',
+
+      // Simple Crowdsale
+      'tokenName': '🪙',
+      'tokenSymbol': '🏷️',
+      'tokenPrice': '💰',
+      'saleDurationInDays': '📅',
+
+      // Dutch Auction
+      'itemDescription': '📝',
+      'startPrice': '💸',
+      'minPrice': '💵',
+      'durationInBlocks': '⛏️',
+
+      // Minimal DAO
+      'votingPeriodInDays': '🗳️',
+      'quorum': '👥',
+
+      // ERC-4626 Vault
+      'profitRatePerYear': '📈',
+
+      // Oracle Consumer
+      'oracleAddress': '📡',
+      'updateIntervalInMinutes': '⏱️',
+      'maxPriceAgeInHours': '📊',
     };
     
     return iconMap[fieldName] || '⚙️';

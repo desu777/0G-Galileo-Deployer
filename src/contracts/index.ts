@@ -9,6 +9,17 @@ import { multisig } from './multisig';
 import { staking } from './staking';
 import { erc20 } from './erc20';
 
+// New contract imports
+import { escrow } from './escrow';
+import { vestingWallet } from './vestingWallet';
+import { timelockVault } from './timelockVault';
+import { merkleAirdrop } from './merkleAirdrop';
+import { simpleCrowdsale } from './simpleCrowdsale';
+import { minimalDao } from './minimalDao';
+import { erc4626Vault } from './erc4626Vault';
+import { soulboundToken } from './soulboundToken';
+import { oracleConsumer } from './oracleConsumer';
+
 export const CONTRACTS = {
   // COMMON CONTRACTS
   greeter,
@@ -17,13 +28,24 @@ export const CONTRACTS = {
   // RARE CONTRACTS
   nft721,
   lottery,
+  escrow,
+  vestingWallet,
+  timelockVault,
 
   // EPIC CONTRACTS
   multisig,
   staking,
+  merkleAirdrop,
+  simpleCrowdsale,
 
-  // LEGENDARY CONTRACT
-  erc20
+  // LEGENDARY CONTRACTS
+  erc20,
+  minimalDao,
+  erc4626Vault,
+
+  // MYTHIC CONTRACTS
+  soulboundToken,
+  oracleConsumer
 };
 
 // Utility function to get contract by ID

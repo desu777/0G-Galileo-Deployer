@@ -787,12 +787,13 @@ h1 {
   background: linear-gradient(135deg, #2ECC71, #27AE60);
   color: white;
   position: relative;
+  padding-right: 32px;
 }
 
 .step.completed::after {
   content: '✓';
   position: absolute;
-  right: 8px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   font-weight: bold;
@@ -803,12 +804,13 @@ h1 {
   color: white;
   animation: pulse 1s infinite;
   position: relative;
+  padding-right: 32px;
 }
 
 .step.error::after {
   content: '✗';
   position: absolute;
-  right: 8px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   font-weight: bold;

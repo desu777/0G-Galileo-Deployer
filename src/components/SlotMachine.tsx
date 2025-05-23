@@ -52,6 +52,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
           ))}
         </div>
         
+        {/* Win banner - automatically disappears after 3 seconds */}
         {selectedContract && showWinAnimation && (
           <div className={`win-banner rarity-${selectedContract.rarity}`}>
             <Sparkles className="sparkle-left" />
