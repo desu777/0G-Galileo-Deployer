@@ -3,13 +3,69 @@ import { ContractType, RarityColors, ContractRarity } from '../types';
 
 // Enhanced contract types with more variety and rarity - REDUCED TO 7 BROWSER-COMPILABLE CONTRACTS
 export const CONTRACT_TYPES: ContractType[] = [
-  { id: 'greeter', name: 'Greeter', icon: MessageSquare, color: '#00D2E9', rarity: 'common', chance: 25, description: 'Say hello to the blockchain' },
-  { id: 'counter', name: 'Counter', icon: Calculator, color: '#FF5CAA', rarity: 'common', chance: 25, description: 'Count your way to success' },
-  { id: 'erc20', name: 'ERC-20 Token', icon: Coins, color: '#FFD700', rarity: 'legendary', chance: 8, description: 'The gold standard of tokens' },
-  { id: 'nft721', name: 'ERC-721 NFT', icon: Palette, color: '#9B59B6', rarity: 'rare', chance: 15, description: 'Unique digital collectibles' },
-  { id: 'lottery', name: 'Lottery', icon: Trophy, color: '#F39C12', rarity: 'rare', chance: 12, description: 'Fortune favors the bold' },
-  { id: 'multisig', name: 'MultiSig Wallet', icon: Shield, color: '#E74C3C', rarity: 'epic', chance: 8, description: 'Ultimate security solution' },
-  { id: 'staking', name: 'Staking Pool', icon: Zap, color: '#2ECC71', rarity: 'epic', chance: 7, description: 'Earn while you sleep' }
+  { 
+    id: 'greeter', 
+    name: 'Greeter', 
+    icon: MessageSquare, 
+    color: '#00D2E9', 
+    rarity: 'common', 
+    chance: 25, 
+    description: 'A simple smart contract that stores and retrieves a greeting message. Perfect for learning blockchain basics - demonstrates state storage, function calls, and events on the blockchain.' 
+  },
+  { 
+    id: 'counter', 
+    name: 'Counter', 
+    icon: Calculator, 
+    color: '#FF5CAA', 
+    rarity: 'common', 
+    chance: 25, 
+    description: 'An elementary contract that maintains a numerical counter. Shows fundamental concepts like state variables, increment/decrement functions, and how data persists on the blockchain.' 
+  },
+  { 
+    id: 'erc20', 
+    name: 'ERC-20 Token', 
+    icon: Coins, 
+    color: '#FFD700', 
+    rarity: 'legendary', 
+    chance: 8, 
+    description: 'The gold standard for fungible tokens on Ethereum-compatible networks. Creates your own cryptocurrency with transfer, approval, and minting capabilities. Used for DeFi, payments, and governance tokens.' 
+  },
+  { 
+    id: 'nft721', 
+    name: 'ERC-721 NFT', 
+    icon: Palette, 
+    color: '#9B59B6', 
+    rarity: 'rare', 
+    chance: 15, 
+    description: 'Non-Fungible Token contract for unique digital assets. Each token has a distinct identity and metadata. Perfect for digital art, collectibles, gaming items, and certificates of ownership.' 
+  },
+  { 
+    id: 'lottery', 
+    name: 'Lottery', 
+    icon: Trophy, 
+    color: '#F39C12', 
+    rarity: 'rare', 
+    chance: 12, 
+    description: 'A decentralized lottery system where participants buy tickets and winners are selected randomly. Demonstrates randomness generation, time-based mechanics, and automated prize distribution on blockchain.' 
+  },
+  { 
+    id: 'multisig', 
+    name: 'MultiSig Wallet', 
+    icon: Shield, 
+    color: '#E74C3C', 
+    rarity: 'epic', 
+    chance: 8, 
+    description: 'Multi-signature wallet requiring multiple confirmations for transactions. Enhanced security for teams and organizations - prevents single points of failure and enables shared custody of digital assets.' 
+  },
+  { 
+    id: 'staking', 
+    name: 'Staking Pool', 
+    icon: Zap, 
+    color: '#2ECC71', 
+    rarity: 'epic', 
+    chance: 7, 
+    description: 'Allows users to stake tokens and earn rewards over time. Implements lockup periods, reward calculations, and automated distribution. Core component of DeFi yield farming and network security mechanisms.' 
+  }
 ];
 
 // Enhanced rarity system with mythic tier

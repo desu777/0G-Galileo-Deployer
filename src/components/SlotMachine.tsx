@@ -39,7 +39,6 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
                 <div className={`contract-icon ${showWinAnimation ? 'winner' : ''}`} style={{ color: contract.color }}>
                   <contract.icon size={48} />
                   <span className="contract-name">{contract.name}</span>
-                  <span className="contract-description">{contract.description}</span>
                   <div className={`rarity-indicator rarity-${contract.rarity}`}>
                     {contract.rarity.toUpperCase()}
                   </div>
