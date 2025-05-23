@@ -5,6 +5,7 @@ import SlotMachine from './components/SlotMachine';
 import Configuration from './components/Configuration';
 import Deploying, { DeploymentPhase } from './components/Deploying';
 import Deployed from './components/Deployed';
+import Footer from './components/Footer';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
 import { ContractType, DeploymentStep, Particle, DeploymentStatus, GameStats } from './types';
 import { createParticles, playSound, getWeightedRandomContract, initializeParticles } from './utils';
@@ -333,6 +334,8 @@ function App() {
           />
         )}
       </div>
+      
+      <Footer />
       
       <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     </div>
