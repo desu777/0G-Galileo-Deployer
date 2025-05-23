@@ -6,7 +6,7 @@ import { compilationRouter } from './routes/compilation';
 import { logger } from './utils/logger';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3999;
 
 // Security middleware
 app.use(helmet());
@@ -14,9 +14,10 @@ app.use(helmet());
 // CORS configuration - allow frontend connection
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://localhost:3000',
-    'http://localhost:5173'
+    process.env.FRONTEND_URL || 'http://localhost:3998',
+    'http://localhost:3998',
+    'http://localhost:5173', // Keep for local development
+    'https://deployer.desu0g.xyz' // Production domain
   ],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
