@@ -1,0 +1,236 @@
+import React, { useState, useEffect } from 'react';
+import { Trophy } from 'lucide-react';
+import Header from './components/Header';
+import SlotMachine from './components/SlotMachine';
+import Configuration from './components/Configuration';
+import Deploying from './components/Deploying';
+import Deployed from './components/Deployed';
+import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
+import { ContractType, DeploymentStep, Particle, DeploymentStatus, GameStats } from './types';
+import { createParticles, playSound, getWeightedRandomContract, generateRandomHash, initializeParticles } from './utils';
+import './styles/globals.css';
+
+function App() {
+  // State management
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<ContractType | null>(null);
+  const [deploymentStep, setDeploymentStep] = useState<DeploymentStep>('slot');
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [spinResult, setSpinResult] = useState<(ContractType | null)[]>([null, null, null]);
+  const [showWinAnimation, setShowWinAnimation] = useState(false);
+  const [deploymentStatus, setDeploymentStatus] = useState<DeploymentStatus | null>(null);
+  const [streak, setStreak] = useState(0);
+  const [totalSpins, setTotalSpins] = useState(0);
+  const [deployed, setDeployed] = useState<DeploymentStatus[]>([]);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [comboMultiplier, setComboMultiplier] = useState(1);
+  const [showAchievement, setShowAchievement] = useState<string | null>(null);
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  const stats: GameStats = {
+    totalSpins,
+    streak,
+    deployed,
+    comboMultiplier
+  };
+
+  // Enhanced particle system
+  useEffect(() => {
+    const cleanup = initializeParticles();
+    return cleanup;
+  }, []);
+
+  // Enhanced spin logic with combo system
+  const spin = () => {
+    if (isSpinning) return;
+    
+    setIsSpinning(true);
+    setShowWinAnimation(false);
+    setSelectedContract(null);
+    setTotalSpins(prev => prev + 1);
+    
+    playSound('spin', soundEnabled);
+    
+    // Enhanced spinning animation with anticipation
+    const duration = 2500 + Math.random() * 1000;
+    const interval = 50;
+    let elapsed = 0;
+    
+    const spinInterval = setInterval(() => {
+      elapsed += interval;
+      
+      // Slow down towards the end for dramatic effect
+      const progress = elapsed / duration;
+      const currentInterval = interval * (1 + progress * 3);
+      
+      setSpinResult([
+        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
+        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
+        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)]
+      ]);
+      
+      if (elapsed >= duration) {
+        clearInterval(spinInterval);
+        
+        // Apply combo multiplier to rarity chances
+        const selected = getWeightedRandomContract(comboMultiplier);
+        setSpinResult([selected, selected, selected]);
+        setSelectedContract(selected);
+        setIsSpinning(false);
+        setShowWinAnimation(true);
+        
+        // Update streak and combo
+        if (selected.rarity !== 'common') {
+          setStreak(prev => prev + 1);
+          setComboMultiplier(prev => Math.min(prev + 0.1, 2));
+        } else {
+          setStreak(0);
+          setComboMultiplier(1);
+        }
+        
+        // Play win sound and create particles
+        playSound(selected.rarity, soundEnabled);
+        if (selected.rarity === 'mythic' || selected.rarity === 'legendary') {
+          const newParticles = createParticles(selected.rarity);
+          setParticles(newParticles);
+          setTimeout(() => setParticles([]), 3000);
+        }
+        
+        // Show achievement
+        if (totalSpins === 0) {
+          showAchievementMessage(ACHIEVEMENT_MESSAGES[0]);
+        } else if (streak >= 5) {
+          showAchievementMessage(ACHIEVEMENT_MESSAGES[1]);
+        } else if (selected.rarity === 'mythic') {
+          showAchievementMessage(ACHIEVEMENT_MESSAGES[5]);
+        }
+      }
+    }, interval);
+  };
+
+  // Show achievement notification
+  const showAchievementMessage = (message: string) => {
+    setShowAchievement(message);
+    setTimeout(() => setShowAchievement(null), 3000);
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Enhanced deploy with success tracking
+  const deployContract = async () => {
+    setDeploymentStep('deploying');
+    
+    setTimeout(() => {
+      if (!selectedContract) return;
+      
+      const newDeployment: DeploymentStatus = {
+        success: true,
+        txHash: generateRandomHash(),
+        contractAddress: generateRandomHash(40),
+        contract: selectedContract,
+        timestamp: Date.now()
+      };
+      
+      setDeploymentStatus(newDeployment);
+      setDeployed(prev => [newDeployment, ...prev].slice(0, 10));
+      setDeploymentStep('deployed');
+      
+      const celebrationParticles = createParticles('celebration');
+      setParticles(celebrationParticles);
+      setTimeout(() => setParticles([]), 3000);
+    }, 2000 + Math.random() * 2000);
+  };
+
+  // Reset with statistics preservation
+  const reset = () => {
+    setDeploymentStep('slot');
+    setSelectedContract(null);
+    setFormData({});
+    setSpinResult([null, null, null]);
+    setShowWinAnimation(false);
+    setDeploymentStatus(null);
+  };
+
+  return (
+    <div className="container">
+      <div id="particles-js" className="particles"></div>
+      
+      {/* Floating particles */}
+      {particles.map(particle => (
+        <div
+          key={particle.id}
+          className="celebration-particle"
+          style={{
+            left: particle.x,
+            top: particle.y,
+            backgroundColor: particle.color,
+            opacity: particle.life
+          }}
+        />
+      ))}
+      
+      {/* Achievement notification */}
+      {showAchievement && (
+        <div className="achievement-notification">
+          <Trophy size={24} />
+          <span>{showAchievement}</span>
+        </div>
+      )}
+      
+      <div className="content">
+        {/* Enhanced header with stats */}
+        <Header 
+          stats={stats}
+          soundEnabled={soundEnabled}
+          setSoundEnabled={setSoundEnabled}
+          streak={streak}
+        />
+
+        {deploymentStep === 'slot' && (
+          <SlotMachine
+            spinResult={spinResult}
+            isSpinning={isSpinning}
+            selectedContract={selectedContract}
+            showWinAnimation={showWinAnimation}
+            comboMultiplier={comboMultiplier}
+            onSpin={spin}
+            onConfigure={() => setDeploymentStep('configure')}
+            deployed={deployed}
+          />
+        )}
+
+        {/* Enhanced configuration with better UX */}
+        {deploymentStep === 'configure' && selectedContract && (
+          <Configuration
+            selectedContract={selectedContract}
+            formData={formData}
+            onInputChange={handleInputChange}
+            onBack={reset}
+            onDeploy={deployContract}
+          />
+        )}
+
+        {/* Enhanced deploying animation */}
+        {deploymentStep === 'deploying' && (
+          <Deploying selectedContract={selectedContract} />
+        )}
+
+        {/* Enhanced success screen */}
+        {deploymentStep === 'deployed' && deploymentStatus && selectedContract && (
+          <Deployed
+            selectedContract={selectedContract}
+            deploymentStatus={deploymentStatus}
+            onReset={reset}
+          />
+        )}
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    </div>
+  );
+}
+
+export default App; 
