@@ -40,8 +40,8 @@ contract SoulboundToken {
     error OnlyOwner();
     error OnlyAuthorizedIssuer();
     error TokenNotExists();
-    error TokenExpired();
-    error TokenRevoked();
+    error TokenExpiredError();
+    error TokenRevokedError();
     error TransferNotAllowed();
     error AlreadyAuthorized();
     error NotAuthorized();

@@ -245,6 +245,16 @@ function App() {
     setDeploymentError(null);
   };
 
+  // Handle wallet connection request
+  const handleConnectWallet = () => {
+    // This will trigger the wallet connection modal
+    // The actual connection logic is handled by RainbowKit in the Header component
+    const connectWalletButton = document.querySelector('.wallet-connect-button') as HTMLButtonElement;
+    if (connectWalletButton) {
+      connectWalletButton.click();
+    }
+  };
+
   return (
     <div className="container">
       <div id="particles-js" className="particles"></div>
@@ -289,6 +299,7 @@ function App() {
             comboMultiplier={comboMultiplier}
             onSpin={spin}
             onConfigure={() => setDeploymentStep('configure')}
+            onConnectWallet={handleConnectWallet}
             deployed={deployed}
           />
         )}

@@ -49,11 +49,11 @@ contract MerkleAirdrop {
         _;
     }
     
-    constructor(uint256 _claimPeriodInDays) payable {
+    constructor(bytes32 _merkleRoot, uint256 _claimPeriodInDays) payable {
         if (_claimPeriodInDays == 0) revert InvalidDeadline();
+        if (_merkleRoot == bytes32(0)) revert InvalidDeadline(); // Reusing error for invalid merkle root
         
-        // Hardcoded Merkle root for demo purposes
-        merkleRoot = 0x9c1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b;
+        merkleRoot = _merkleRoot;
         owner = msg.sender;
         claimDeadline = block.timestamp + (_claimPeriodInDays * 1 days);
     }
@@ -150,6 +150,7 @@ contract MerkleAirdrop {
     receive() external payable {}
 }`,
   formFields: [
+    { name: 'merkleRoot', type: 'string', label: 'Merkle Root (32 bytes)', placeholder: '0x1234...', required: true },
     { name: 'claimPeriodInDays', type: 'number', label: 'Claim Period (days)', placeholder: '90', required: true }
   ]
 }; 

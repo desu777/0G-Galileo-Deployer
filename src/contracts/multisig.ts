@@ -180,7 +180,7 @@ contract SimpleMultiSig {
     }
 }`,
   formFields: [
-    { name: 'owners', type: 'textarea', label: 'Owner Addresses (one per line)', placeholder: '0x742d35Cc6129C6532C89396D0EC99E8A0C98C8C7\n0x8ba1f109551bD432803012645Hac136c5C3d56a', required: true },
+    { name: 'owners', type: 'textarea', label: 'Owner Addresses (paste 2 different address, one per line)', placeholder: '0x742d35Cc6129C6532C89396D0EC99E8A0C98C8C7\n0x8ba1f109551bD432803012645Hac136c5C3d56a', required: true },
     { name: 'required', type: 'number', label: 'Required Confirmations', placeholder: '2', required: true }
   ]
 }; 

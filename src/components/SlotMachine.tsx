@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Sparkles, Code, Rocket } from 'lucide-react';
+import { Sparkles, Code, Rocket, Wallet } from 'lucide-react';
+import { useAccount } from 'wagmi';
 import { ContractType, DeploymentStatus } from '../types';
 
 interface SlotMachineProps {
@@ -10,6 +11,7 @@ interface SlotMachineProps {
   comboMultiplier: number;
   onSpin: () => void;
   onConfigure: () => void;
+  onConnectWallet: () => void;
   deployed: DeploymentStatus[];
 }
 
@@ -21,9 +23,11 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
   comboMultiplier,
   onSpin,
   onConfigure,
+  onConnectWallet,
   deployed
 }) => {
   const slotRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
+  const { isConnected } = useAccount();
 
   return (
     <div className="slot-machine-container">
@@ -66,14 +70,19 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
       </div>
       
       <button 
-        className={`spin-button ${isSpinning ? 'spinning' : ''} ${comboMultiplier > 1 ? 'combo' : ''}`}
-        onClick={onSpin}
+        className={`spin-button ${isSpinning ? 'spinning' : ''} ${comboMultiplier > 1 ? 'combo' : ''} ${!isConnected ? 'wallet-required' : ''}`}
+        onClick={isConnected ? onSpin : onConnectWallet}
         disabled={isSpinning}
       >
         {isSpinning ? (
           <>
             <div className="spinner" />
             Spinning...
+          </>
+        ) : !isConnected ? (
+          <>
+            <Wallet size={20} />
+            CONNECT TO SPIN
           </>
         ) : (
           <>
@@ -83,7 +92,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
         )}
       </button>
       
-      {selectedContract && !isSpinning && (
+      {selectedContract && !isSpinning && isConnected && (
         <button 
           className={`continue-button rarity-${selectedContract.rarity}`}
           onClick={onConfigure}
