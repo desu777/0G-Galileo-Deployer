@@ -3,11 +3,15 @@ import { Trophy } from 'lucide-react';
 import Header from './components/Header';
 import SlotMachine from './components/SlotMachine';
 import Configuration from './components/Configuration';
-import Deploying from './components/Deploying';
+import Deploying, { DeploymentPhase } from './components/Deploying';
 import Deployed from './components/Deployed';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
 import { ContractType, DeploymentStep, Particle, DeploymentStatus, GameStats } from './types';
-import { createParticles, playSound, getWeightedRandomContract, generateRandomHash, initializeParticles } from './utils';
+import { createParticles, playSound, getWeightedRandomContract, initializeParticles } from './utils';
+import { processFormDataToConstructorArgs, validateFormData } from './utils/contractProcessor';
+import { compilerService } from './services/compiler';
+import { blockchainService } from './services/blockchain';
+import { getContractById } from './contracts';
 import './styles/globals.css';
 
 function App() {
@@ -26,6 +30,8 @@ function App() {
   const [comboMultiplier, setComboMultiplier] = useState(1);
   const [showAchievement, setShowAchievement] = useState<string | null>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [deploymentPhase, setDeploymentPhase] = useState<DeploymentPhase>('compiling');
+  const [deploymentError, setDeploymentError] = useState<string | null>(null);
 
   const stats: GameStats = {
     totalSpins,
@@ -119,29 +125,108 @@ function App() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Enhanced deploy with success tracking
+  // Real deployment with compilation and blockchain integration
   const deployContract = async () => {
+    if (!selectedContract) return;
+
     setDeploymentStep('deploying');
-    
-    setTimeout(() => {
-      if (!selectedContract) return;
+    setDeploymentPhase('compiling');
+    setDeploymentError(null);
+
+    try {
+      // Phase 1: Validate form data
+      const validation = validateFormData(formData, selectedContract.id);
+      if (!validation.isValid) {
+        throw new Error(validation.error);
+      }
+
+      // Phase 2: Compile contract
+      const contractTemplate = getContractById(selectedContract.id);
+      if (!contractTemplate) {
+        throw new Error(`Contract template not found: ${selectedContract.id}`);
+      }
+
+      const compilationRequest = {
+        contractId: selectedContract.id,
+        contractName: contractTemplate.name.replace(/\s+/g, ''), // Remove spaces for contract name
+        solidityCode: contractTemplate.solidity,
+        formData
+      };
+
+      const compilationResult = await compilerService.compileContract(compilationRequest);
       
+      if (!compilationResult.success || !compilationResult.bytecode || !compilationResult.abi) {
+        throw new Error(compilationResult.error || 'Compilation failed');
+      }
+
+      // Phase 3: Prepare constructor arguments
+      setDeploymentPhase('broadcasting');
+      const constructorArgs = processFormDataToConstructorArgs(formData, selectedContract.id);
+
+      // Phase 4: Deploy to blockchain
+      if (!blockchainService.isWalletConnected()) {
+        throw new Error('Wallet not connected. Please connect your wallet first.');
+      }
+
+      const deploymentResult = await blockchainService.deployContract({
+        bytecode: compilationResult.bytecode,
+        abi: compilationResult.abi,
+        args: constructorArgs
+      });
+
+      if (!deploymentResult.success) {
+        throw new Error(deploymentResult.error || 'Deployment failed');
+      }
+
+      // Phase 5: Wait for confirmation
+      setDeploymentPhase('confirming');
+      
+      // Create deployment status
       const newDeployment: DeploymentStatus = {
         success: true,
-        txHash: generateRandomHash(),
-        contractAddress: generateRandomHash(40),
+        txHash: deploymentResult.txHash!,
+        contractAddress: deploymentResult.contractAddress!,
         contract: selectedContract,
         timestamp: Date.now()
       };
-      
+
       setDeploymentStatus(newDeployment);
       setDeployed(prev => [newDeployment, ...prev].slice(0, 10));
       setDeploymentStep('deployed');
-      
+
+      // Success particles
       const celebrationParticles = createParticles('celebration');
       setParticles(celebrationParticles);
       setTimeout(() => setParticles([]), 3000);
-    }, 2000 + Math.random() * 2000);
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown deployment error';
+      setDeploymentError(errorMessage);
+      
+      // Create failed deployment status
+      const failedDeployment: DeploymentStatus = {
+        success: false,
+        txHash: '',
+        contractAddress: '',
+        contract: selectedContract,
+        timestamp: Date.now(),
+        error: errorMessage
+      };
+
+      setDeploymentStatus(failedDeployment);
+      setDeployed(prev => [failedDeployment, ...prev].slice(0, 10));
+      
+      // Show error for 5 seconds then reset
+      setTimeout(() => {
+        setDeploymentStep('slot');
+        setDeploymentError(null);
+        setFormData({});
+        setSelectedContract(null);
+        setSpinResult([null, null, null]);
+        setShowWinAnimation(false);
+        setDeploymentStatus(null);
+      }, 5000);
+    }
   };
 
   // Reset with statistics preservation
@@ -152,6 +237,7 @@ function App() {
     setSpinResult([null, null, null]);
     setShowWinAnimation(false);
     setDeploymentStatus(null);
+    setDeploymentError(null);
   };
 
   return (
@@ -213,9 +299,13 @@ function App() {
           />
         )}
 
-        {/* Enhanced deploying animation */}
+        {/* Real deployment with phases */}
         {deploymentStep === 'deploying' && (
-          <Deploying selectedContract={selectedContract} />
+          <Deploying 
+            selectedContract={selectedContract} 
+            currentPhase={deploymentPhase}
+            error={deploymentError || undefined}
+          />
         )}
 
         {/* Enhanced success screen */}

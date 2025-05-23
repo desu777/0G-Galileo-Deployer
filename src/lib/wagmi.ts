@@ -1,5 +1,5 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { defineChain } from 'viem';
+import { defineChain, http } from 'viem';
 import { log } from '../utils';
 
 // 0G-Galileo-Testnet custom chain definition
@@ -51,5 +51,8 @@ export const config = getDefaultConfig({
   appName: '0G Contract Slot Machine',
   projectId: projectId || 'demo', // Use demo as fallback for development
   chains: [zeroGGalileoTestnet],
+  transports: {
+    [zeroGGalileoTestnet.id]: http('https://evmrpc-testnet.0g.ai'),
+  },
   ssr: false, // We're using Vite, not SSR
 }); 

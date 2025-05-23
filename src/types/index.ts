@@ -38,6 +38,7 @@ export interface DeploymentStatus {
   contractAddress: string;
   contract: ContractType;
   timestamp: number;
+  error?: string;
 }
 
 export interface GameStats {
@@ -72,9 +73,13 @@ export interface CompiledContract {
 
 export interface CompilationResult {
   success: boolean;
-  contract?: CompiledContract;
+  bytecode?: string;
+  abi?: any[];
+  contractName?: string;
+  gasEstimate?: number;
   error?: string;
   warnings?: string[];
+  compilationTime?: number;
 }
 
 export interface DeploymentTransaction {
