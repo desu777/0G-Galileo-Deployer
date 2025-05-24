@@ -85,7 +85,7 @@ function App() {
         // Hide win banner after 3 seconds
         setTimeout(() => {
           setShowWinAnimation(false);
-        }, 4000);
+        }, 3000);
         
         // Update streak and combo
         if (selected.rarity !== 'common') {

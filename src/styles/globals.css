@@ -11,6 +11,8 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .particles {
@@ -55,6 +57,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  flex: 1;
 }
 
 .header {
