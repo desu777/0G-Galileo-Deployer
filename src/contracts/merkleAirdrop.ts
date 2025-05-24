@@ -150,6 +150,7 @@ contract MerkleAirdrop {
     receive() external payable {}
 }`,
   formFields: [
+    { name: 'recipientsList', type: 'textarea', label: 'Recipients List (address,amount per line)', placeholder: '0x742d35Cc6634C0532925a3b8D1F9E71Ed8D9BEE0,1000000000000000000\n0x8ba1f109551bD432803012645Hac136c0532925d,500000000000000000', required: false },
     { name: 'merkleRoot', type: 'string', label: 'Merkle Root (32 bytes)', placeholder: '0x1234...', required: true },
     { name: 'claimPeriodInDays', type: 'number', label: 'Claim Period (days)', placeholder: '90', required: true }
   ]
