@@ -13,6 +13,7 @@ interface SlotMachineProps {
   onConfigure: () => void;
   onConnectWallet: () => void;
   deployed: DeploymentStatus[];
+  hideConfigureButton?: boolean;
 }
 
 const SlotMachine: React.FC<SlotMachineProps> = ({
@@ -24,7 +25,8 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
   onSpin,
   onConfigure,
   onConnectWallet,
-  deployed
+  deployed,
+  hideConfigureButton = false
 }) => {
   const slotRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
   const { isConnected } = useAccount();
@@ -92,7 +94,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({
         )}
       </button>
       
-      {selectedContract && !isSpinning && isConnected && (
+      {selectedContract && !isSpinning && isConnected && !hideConfigureButton && (
         <button 
           className={`continue-button rarity-${selectedContract.rarity}`}
           onClick={onConfigure}

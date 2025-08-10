@@ -6,6 +6,7 @@ import Configuration from './components/Configuration';
 import Deploying, { DeploymentPhase } from './components/Deploying';
 import Deployed from './components/Deployed';
 import Footer from './components/Footer';
+import ContractModal from './components/ContractModal';
 import { ModeProvider, useMode } from './contexts/ModeContext';
 import ModeSelector from './components/ModeSelector';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
@@ -39,6 +40,7 @@ function AppContent() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [deploymentPhase, setDeploymentPhase] = useState<DeploymentPhase>('compiling');
   const [deploymentError, setDeploymentError] = useState<string | null>(null);
+  const [showContractModal, setShowContractModal] = useState(false);
 
   const stats: GameStats = {
     totalSpins,
@@ -92,10 +94,13 @@ function AppContent() {
         setIsSpinning(false);
         setShowWinAnimation(true);
         
-        // Hide win banner after 3 seconds
+        // Show contract modal instead of auto-hiding win banner
+        setShowContractModal(true);
+        
+        // Hide win animation after 2 seconds but keep modal open
         setTimeout(() => {
           setShowWinAnimation(false);
-        }, 3000);
+        }, 2000);
         
         // Update streak and combo
         if (selected.rarity !== 'common') {
@@ -264,6 +269,23 @@ function AppContent() {
     }
   };
 
+  // Handle modal actions
+  const handleModalDeploy = () => {
+    setShowContractModal(false);
+    // Skip configuration for Jaine mode (no form fields needed)
+    if (mode === 'jaine') {
+      deployContract();
+    } else {
+      setDeploymentStep('configure');
+    }
+  };
+
+  const handleModalSpinAgain = () => {
+    setShowContractModal(false);
+    reset();
+    spin();
+  };
+
   return (
     <div className="container">
       <div id="particles-js" className="particles"></div>
@@ -310,8 +332,18 @@ function AppContent() {
             onConfigure={() => setDeploymentStep('configure')}
             onConnectWallet={handleConnectWallet}
             deployed={deployed}
+            hideConfigureButton={showContractModal}
           />
         )}
+        
+        {/* Contract Details Modal */}
+        <ContractModal
+          contract={selectedContract}
+          isOpen={showContractModal}
+          onClose={() => setShowContractModal(false)}
+          onDeploy={handleModalDeploy}
+          onSpinAgain={handleModalSpinAgain}
+        />
 
         {/* Enhanced configuration with better UX */}
         {deploymentStep === 'configure' && selectedContract && (
