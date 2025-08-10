@@ -66,6 +66,9 @@ body.jaine-mode {
   height: 250px;
   overflow: hidden;
   border-radius: 50%;
+  /* Override global cyan pulse with violet */
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+  animation: violetPulse 3s ease-in-out infinite;
 }
 
 .jaine-mode .logo-container img {
@@ -82,10 +85,10 @@ body.jaine-mode {
 
 @keyframes violetPulse {
   0%, 100% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.8), 0 0 80px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.7), 0 0 70px rgba(168, 85, 247, 0.35);
   }
   50% {
-    box-shadow: 0 0 60px rgba(139, 92, 246, 1), 0 0 100px rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 55px rgba(139, 92, 246, 0.95), 0 0 95px rgba(168, 85, 247, 0.55);
   }
 }
 
