@@ -123,6 +123,27 @@ export function processFormDataToConstructorArgs(formData: Record<string, any>, 
         parseInt(formData.maxPriceAgeInHours) || 24
       ];
     
+    // Jaine contracts - all have empty constructors
+    case 'jaine_blocked_me':
+    case 'jaine_friendzoned_me':
+    case 'jaine_ghosted_me':
+    case 'jaine_left_me_on_read':
+    case 'jaine_picked_chad':
+    case 'jaine_said_ew':
+    case 'jaine_posted_another_guy':
+    case 'jaine_said_im_too_short':
+    case 'jaine_texted_back_k':
+    case 'jaine_will_notice_me_someday':
+    case 'jaine_laughed_at_my_portfolio':
+    case 'jaine_married_my_bully':
+    case 'jaine_said_touch_grass':
+    case 'jaine_called_security':
+    case 'jaine_restraining_order':
+    case 'marry_jaine':
+    case 'jaine_actually_replied':
+      // All Jaine contracts have empty constructors
+      return [];
+    
     default:
       log.warn('Unknown contract ID, returning empty args:', contractId);
       return [];
@@ -273,6 +294,27 @@ export function validateFormData(formData: Record<string, any>, contractId: stri
           return { isValid: false, error: 'Max price age must be a positive number' };
         }
         break;
+      
+      // Jaine contracts validation - all have empty constructors so always valid
+      case 'jaine_blocked_me':
+      case 'jaine_friendzoned_me':
+      case 'jaine_ghosted_me':
+      case 'jaine_left_me_on_read':
+      case 'jaine_picked_chad':
+      case 'jaine_said_ew':
+      case 'jaine_posted_another_guy':
+      case 'jaine_said_im_too_short':
+      case 'jaine_texted_back_k':
+      case 'jaine_will_notice_me_someday':
+      case 'jaine_laughed_at_my_portfolio':
+      case 'jaine_married_my_bully':
+      case 'jaine_said_touch_grass':
+      case 'jaine_called_security':
+      case 'jaine_restraining_order':
+      case 'marry_jaine':
+      case 'jaine_actually_replied':
+        // All Jaine contracts have empty constructors, so they're always valid
+        return { isValid: true };
     }
     
     return { isValid: true };

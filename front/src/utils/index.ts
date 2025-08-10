@@ -91,8 +91,8 @@ export const playSound = (type: string, soundEnabled: boolean) => {
 };
 
 // Enhanced weighted random with combo multiplier
-export const getWeightedRandomContract = (comboMultiplier: number): ContractType => {
-  const contracts = CONTRACT_TYPES.map(contract => ({
+export const getWeightedRandomContract = (comboMultiplier: number, contractList?: ContractType[]): ContractType => {
+  const contracts = (contractList || CONTRACT_TYPES).map(contract => ({
     ...contract,
     adjustedChance: contract.rarity === 'common' ? 
       contract.chance / comboMultiplier : 

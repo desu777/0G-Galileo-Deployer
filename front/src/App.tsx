@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Trophy } from 'lucide-react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { Trophy, RefreshCw } from 'lucide-react';
 import Header from './components/Header';
 import SlotMachine from './components/SlotMachine';
 import Configuration from './components/Configuration';
 import Deploying, { DeploymentPhase } from './components/Deploying';
 import Deployed from './components/Deployed';
 import Footer from './components/Footer';
+import { ModeProvider, useMode } from './contexts/ModeContext';
+import ModeSelector from './components/ModeSelector';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
+import { JAINE_CONTRACT_TYPES, JAINE_ACHIEVEMENT_MESSAGES } from './constants/jaine';
 import { ContractType, DeploymentStep, Particle, DeploymentStatus, GameStats } from './types';
 import { createParticles, playSound, getWeightedRandomContract, initializeParticles } from './utils';
 import { processFormDataToConstructorArgs, validateFormData } from './utils/contractProcessor';
 import { compilerService } from './services/compiler';
 import { blockchainService } from './services/blockchain';
 import { getContractById } from './contracts';
+import { getJaineContractById } from './contracts/jaine';
 import './styles/globals.css';
+import './styles/jaine.css';
 
-function App() {
+function AppContent() {
+  const { mode, toggleMode } = useMode();
   // State management
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedContract, setSelectedContract] = useState<ContractType | null>(null);
@@ -47,6 +53,10 @@ function App() {
     return cleanup;
   }, []);
 
+  // Get contracts based on current mode
+  const currentContracts = mode === 'jaine' ? JAINE_CONTRACT_TYPES : CONTRACT_TYPES;
+  const currentAchievements = mode === 'jaine' ? JAINE_ACHIEVEMENT_MESSAGES : ACHIEVEMENT_MESSAGES;
+
   // Enhanced spin logic with combo system
   const spin = () => {
     if (isSpinning) return;
@@ -67,16 +77,16 @@ function App() {
       elapsed += interval;
       
       setSpinResult([
-        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
-        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)],
-        CONTRACT_TYPES[Math.floor(Math.random() * CONTRACT_TYPES.length)]
+        currentContracts[Math.floor(Math.random() * currentContracts.length)],
+        currentContracts[Math.floor(Math.random() * currentContracts.length)],
+        currentContracts[Math.floor(Math.random() * currentContracts.length)]
       ]);
       
       if (elapsed >= duration) {
         clearInterval(spinInterval);
         
         // Apply combo multiplier to rarity chances
-        const selected = getWeightedRandomContract(comboMultiplier);
+        const selected = getWeightedRandomContract(comboMultiplier, currentContracts);
         setSpinResult([selected, selected, selected]);
         setSelectedContract(selected);
         setIsSpinning(false);
@@ -106,11 +116,11 @@ function App() {
         
         // Show achievement
         if (totalSpins === 0) {
-          showAchievementMessage(ACHIEVEMENT_MESSAGES[0]);
+          showAchievementMessage(currentAchievements[0]);
         } else if (streak >= 5) {
-          showAchievementMessage(ACHIEVEMENT_MESSAGES[1]);
+          showAchievementMessage(currentAchievements[1]);
         } else if (selected.rarity === 'mythic') {
-          showAchievementMessage(ACHIEVEMENT_MESSAGES[5]);
+          showAchievementMessage(currentAchievements[5]);
         }
       }
     }, interval);
@@ -143,7 +153,9 @@ function App() {
       }
 
       // Phase 2: Compile contract
-      const contractTemplate = getContractById(selectedContract.id);
+      const contractTemplate = mode === 'jaine' 
+        ? getJaineContractById(selectedContract.id)
+        : getContractById(selectedContract.id);
       if (!contractTemplate) {
         throw new Error(`Contract template not found: ${selectedContract.id}`);
       }
@@ -333,8 +345,27 @@ function App() {
       
       <Footer />
       
+      {/* Mode toggle button */}
+      <button 
+        className="mode-toggle-button" 
+        onClick={toggleMode}
+        title={`Switch to ${mode === 'normal' ? 'Jaine' : 'Normal'} Mode`}
+      >
+        <RefreshCw size={24} />
+      </button>
+      
       <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     </div>
+  );
+}
+
+// Main App component with ModeProvider wrapper
+function App() {
+  return (
+    <ModeProvider>
+      <ModeSelector />
+      <AppContent />
+    </ModeProvider>
   );
 }
 

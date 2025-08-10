@@ -4,6 +4,8 @@ export type ContractRarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
 export type DeploymentStep = 'slot' | 'configure' | 'deploying' | 'deployed';
 
+export type GameMode = 'normal' | 'jaine';
+
 export interface ContractType {
   id: string;
   name: string;
@@ -12,6 +14,7 @@ export interface ContractType {
   rarity: ContractRarity;
   chance: number;
   description: string;
+  mode?: GameMode;
 }
 
 export interface RarityColors {

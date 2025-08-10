@@ -2,6 +2,7 @@ import React from 'react';
 import { Volume2, VolumeX, Github } from 'lucide-react';
 import { GameStats } from '../types';
 import ConnectWallet from './ConnectWallet';
+import { useMode } from '../contexts/ModeContext';
 
 interface HeaderProps {
   stats: GameStats;
@@ -29,6 +30,7 @@ const Header: React.FC<HeaderProps> = ({
   setSoundEnabled,
   streak
 }) => {
+  const { mode } = useMode();
   return (
     <div className="header">
       <div className="stats-bar">
@@ -57,13 +59,17 @@ const Header: React.FC<HeaderProps> = ({
       </div>
       
       <div className="logo-container">
-        <img src="/gamble.png" alt="0G" />
+        <img src={mode === 'jaine' ? '/jaine.jpg' : '/gamble.png'} alt={mode === 'jaine' ? 'Jaine' : '0G'} />
         {stats.comboMultiplier > 1 && (
           <div className="combo-indicator">{stats.comboMultiplier.toFixed(1)}x</div>
         )}
       </div>
-      <h1>0G Contract Slot Machine</h1>
-      <p className="subtitle">Spin to deploy your legendary smart contracts!</p>
+      <h1>{mode === 'jaine' ? 'Simp Jaine Deployer' : '0G Contract Slot Machine'}</h1>
+      <p className="subtitle">
+        {mode === 'jaine' 
+          ? 'Spin to deploy various contracts on 0G like a truly devoted Jaine Simp!' 
+          : 'Spin to deploy your legendary smart contracts!'}
+      </p>
       
       <div className="powered-by">
         <span className="powered-text">powered by desu</span>
