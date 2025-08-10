@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 
-export type ContractRarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
+export type ContractRarity = 'common' | 'rare' | 'epic' | 'legendary' | 'legendary-ultra' | 'mythic';
 
 export type DeploymentStep = 'slot' | 'configure' | 'deploying' | 'deployed';
 

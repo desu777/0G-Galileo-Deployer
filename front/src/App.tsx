@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trophy, RefreshCw } from 'lucide-react';
 import Header from './components/Header';
 import SlotMachine from './components/SlotMachine';
@@ -8,7 +8,6 @@ import Deployed from './components/Deployed';
 import Footer from './components/Footer';
 import ContractModal from './components/ContractModal';
 import DropRatesModal from './components/DropRatesModal';
-import { useState as useReactState } from 'react';
 import { ModeProvider, useMode } from './contexts/ModeContext';
 import ModeSelector from './components/ModeSelector';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';

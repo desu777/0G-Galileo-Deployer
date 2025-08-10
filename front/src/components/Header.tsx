@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Volume2, VolumeX, Github, Globe } from 'lucide-react';
+import { Volume2, VolumeX, Github } from 'lucide-react';
 import { GameStats } from '../types';
 import ConnectWallet from './ConnectWallet';
 import { useMode } from '../contexts/ModeContext';

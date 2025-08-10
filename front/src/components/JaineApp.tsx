@@ -1,12 +1,5 @@
-import React, { lazy, Suspense } from 'react';
-import { JAINE_CONTRACT_TYPES } from '../constants/jaine';
-import { getJaineContractById } from '../contracts/jaine';
-
-// Lazy load heavy components for Jaine mode
-const SlotMachine = lazy(() => import('./SlotMachine'));
-const Configuration = lazy(() => import('./Configuration'));
-const Deploying = lazy(() => import('./Deploying'));
-const Deployed = lazy(() => import('./Deployed'));
+import React, { Suspense } from 'react';
+// Lazy load heavy components for Jaine mode (if needed in future)
 
 interface JaineAppProps {
   // Pass any necessary props from main App
@@ -29,7 +22,7 @@ const JaineApp: React.FC<JaineAppProps> = () => {
         </div>
       </Suspense>
 
-      <style jsx>{`
+      <style>{`
         .jaine-app-container {
           min-height: 100vh;
           background: linear-gradient(135deg, #000000, #1a0a1a, #2d1b69, #663399);

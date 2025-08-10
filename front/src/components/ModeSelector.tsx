@@ -12,7 +12,7 @@ import {
 import { useMode } from '../contexts/ModeContext';
 
 const ModeSelector: React.FC = () => {
-  const { mode, setMode } = useMode();
+  const { setMode } = useMode();
   const [isVisible, setIsVisible] = React.useState(() => {
     // Show selector on first visit
     return !localStorage.getItem('modeSelectorShown');
@@ -113,7 +113,7 @@ const ModeSelector: React.FC = () => {
         </p>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .mode-selector-overlay {
           position: fixed;
           top: 0;

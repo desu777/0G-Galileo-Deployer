@@ -164,6 +164,7 @@ export const RARITY_COLORS: Record<ContractRarity, RarityColors> = {
   rare: { bg: 'rgba(41, 128, 185, 0.2)', border: '#2980B9', glow: 'rgba(41, 128, 185, 0.5)', textShadow: '0 0 15px rgba(41, 128, 185, 0.8)' },
   epic: { bg: 'rgba(142, 68, 173, 0.2)', border: '#8E44AD', glow: 'rgba(142, 68, 173, 0.5)', textShadow: '0 0 20px rgba(142, 68, 173, 0.9)' },
   legendary: { bg: 'rgba(255, 215, 0, 0.2)', border: '#FFD700', glow: 'rgba(255, 215, 0, 0.6)', textShadow: '0 0 25px rgba(255, 215, 0, 1)' },
+  'legendary-ultra': { bg: 'rgba(255, 140, 0, 0.2)', border: '#FF8C00', glow: 'rgba(255, 140, 0, 0.7)', textShadow: '0 0 28px rgba(255, 140, 0, 1)' },
   mythic: { bg: 'rgba(255, 0, 128, 0.2)', border: '#FF0080', glow: 'rgba(255, 0, 128, 0.8)', textShadow: '0 0 30px rgba(255, 0, 128, 1)' }
 };
 
