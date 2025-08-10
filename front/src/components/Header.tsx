@@ -87,10 +87,22 @@ const Header: React.FC<HeaderProps> = ({
           <div className="combo-indicator">{stats.comboMultiplier.toFixed(1)}x</div>
         )}
       </div>
-      <h1>{mode === 'jaine' ? 'Simp Jaine Deployer' : '0G Contract Slot Machine'}</h1>
+      <h1>
+        {mode === 'jaine' ? (
+          <>
+            Contract Slot Machine ·{' '}
+            <img src="/logo.svg" alt="JAINE" style={{ height: 64, verticalAlign: 'text-bottom', margin: '0 10px' }} />
+            {' '}Edition
+          </>
+        ) : (
+          <>
+            Contract Slot Machine
+          </>
+        )}
+      </h1>
       <p className="subtitle">
-        {mode === 'jaine' 
-          ? 'Spin to deploy various contracts on 0G like a truly devoted Jaine Simp!' 
+        {mode === 'jaine'
+          ? 'Spin to deploy JAINE‑themed smart contracts on 0G‑Galileo‑Testnet — on‑chain bytecode, maximum 2D‑waifu simp energy.'
           : 'Spin to deploy your legendary smart contracts!'}
       </p>
       
