@@ -7,12 +7,15 @@ import Deploying, { DeploymentPhase } from './components/Deploying';
 import Deployed from './components/Deployed';
 import Footer from './components/Footer';
 import ContractModal from './components/ContractModal';
+import DropRatesModal from './components/DropRatesModal';
 import { ModeProvider, useMode } from './contexts/ModeContext';
 import ModeSelector from './components/ModeSelector';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
 import { JAINE_CONTRACT_TYPES, JAINE_ACHIEVEMENT_MESSAGES } from './constants/jaine';
 import { ContractType, DeploymentStep, Particle, DeploymentStatus, GameStats } from './types';
 import { createParticles, playSound, getWeightedRandomContract, initializeParticles } from './utils';
+import { useAccount } from 'wagmi';
+import { statsService } from './services/stats';
 import { processFormDataToConstructorArgs, validateFormData } from './utils/contractProcessor';
 import { compilerService } from './services/compiler';
 import { blockchainService } from './services/blockchain';
@@ -23,6 +26,7 @@ import './styles/jaine.css';
 
 function AppContent() {
   const { mode, toggleMode } = useMode();
+  const { address, isConnected } = useAccount();
   // State management
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedContract, setSelectedContract] = useState<ContractType | null>(null);
@@ -41,6 +45,7 @@ function AppContent() {
   const [deploymentPhase, setDeploymentPhase] = useState<DeploymentPhase>('compiling');
   const [deploymentError, setDeploymentError] = useState<string | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
+  const [showRates, setShowRates] = useState(false);
 
   const stats: GameStats = {
     totalSpins,
@@ -119,6 +124,11 @@ function AppContent() {
           setTimeout(() => setParticles([]), 3000);
         }
         
+        // Update server-side spin metrics
+        if (isConnected && address) {
+          statsService.postSpin(address, selected.rarity).catch(() => {});
+        }
+
         // Show achievement
         if (totalSpins === 0) {
           showAchievementMessage(currentAchievements[0]);
@@ -322,6 +332,15 @@ function AppContent() {
           streak={streak}
         />
 
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <button className="secondary-button view-rates-btn" onClick={() => setShowRates(true)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3h2v18H3V3zm16 2h2v14h-2V5zM7 9h2v12H7V9zm8-4h2v16h-2V5zm-4 8h2v8h-2v-8z" fill="currentColor"/>
+            </svg>
+            View Drop Rates
+          </button>
+        </div>
+
         {deploymentStep === 'slot' && (
           <SlotMachine
             spinResult={spinResult}
@@ -344,6 +363,13 @@ function AppContent() {
           onClose={() => setShowContractModal(false)}
           onDeploy={handleModalDeploy}
           onSpinAgain={handleModalSpinAgain}
+        />
+
+        <DropRatesModal 
+          isOpen={showRates} 
+          onClose={() => setShowRates(false)} 
+          contracts={currentContracts} 
+          title={mode === 'jaine' ? 'Jaine Mode Drop Rates' : 'Classic Mode Drop Rates'}
         />
 
         {/* Enhanced configuration with better UX */}

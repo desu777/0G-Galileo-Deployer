@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Volume2, VolumeX, Github } from 'lucide-react';
 import { GameStats } from '../types';
 import ConnectWallet from './ConnectWallet';
 import { useMode } from '../contexts/ModeContext';
+import { useAccount } from 'wagmi';
+import { statsService, UserMetrics } from '../services/stats';
 
 interface HeaderProps {
   stats: GameStats;
@@ -31,24 +33,45 @@ const Header: React.FC<HeaderProps> = ({
   streak
 }) => {
   const { mode } = useMode();
+  const { address, isConnected } = useAccount();
+  const [metrics, setMetrics] = useState<UserMetrics | null>(null);
+
+  useEffect(() => {
+    let timer: any;
+    const load = async () => {
+      try {
+        if (isConnected && address) {
+          const m = await statsService.getUserMetrics(address);
+          setMetrics(m);
+        } else {
+          setMetrics(null);
+        }
+      } catch {
+        // ignore
+      }
+    };
+    load();
+    timer = setInterval(load, 15000);
+    return () => clearInterval(timer);
+  }, [isConnected, address]);
   return (
     <div className="header">
       <div className="stats-bar">
         <div className="stat-item">
           <span className="stat-label">Spins</span>
-          <span className="stat-value">{stats.totalSpins}</span>
+          <span className="stat-value">{metrics ? metrics.spins_total : stats.totalSpins}</span>
         </div>
         <div className="stat-item">
           <span className="stat-label">Streak</span>
-          <span className="stat-value">{streak}</span>
+          <span className="stat-value">{metrics ? metrics.streak_current : streak}</span>
         </div>
         <div className="stat-item">
           <span className="stat-label">Deployed</span>
-          <span className="stat-value">{stats.deployed.length}</span>
+          <span className="stat-value">{metrics ? metrics.total : stats.deployed.length}</span>
         </div>
         <div className="stat-item">
           <span className="stat-label">Combo</span>
-          <span className="stat-value">{stats.comboMultiplier.toFixed(1)}x</span>
+          <span className="stat-value">{metrics ? metrics.combo_multiplier.toFixed(1) : stats.comboMultiplier.toFixed(1)}x</span>
         </div>
         <button 
           className="sound-toggle"

@@ -1197,6 +1197,43 @@ h1 {
   justify-content: center;
 }
 
+/* View Drop Rates button - normal mode */
+.view-rates-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  transition: all .25s ease;
+}
+.view-rates-btn svg { color: #ffffff; opacity: .9; }
+.view-rates-btn:hover { 
+  border-color: rgba(255,255,255,0.6);
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  transform: translateY(-1px);
+}
+.view-rates-btn:active { transform: translateY(0); }
+
+/* Drop Rates modal (normal mode) */
+.drops-modal .drop-summary { display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#9999A5; }
+.drops-modal .drop-summary strong { color:#E6E6E6; }
+.drops-modal .muted { opacity:.7; font-size:12px; }
+.drops-modal .drop-group { margin-bottom:18px; }
+.drops-modal .drop-group-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; color:#E6E6E6; }
+.drops-modal .group-title { font-weight:700; letter-spacing:.5px; }
+.drops-modal .drop-items { display:flex; flex-direction:column; gap:8px; }
+.drops-modal .drop-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px; background: rgba(18, 18, 24, 0.9); border:1px solid rgba(60, 75, 95, 0.3); border-radius:10px; }
+.drops-modal .item-left { display:flex; align-items:center; gap:8px; color:#E6E6E6; }
+.drops-modal .item-right { display:flex; align-items:center; gap:8px; }
+.drops-modal .chance-bar { width:120px; height:6px; background: rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; }
+.drops-modal .chance-fill { height:100%; background: linear-gradient(90deg, #00D2E9, #FF5CAA); }
+.drops-modal .chance-text { color:#9999A5; font-weight:700; font-size:12px; }
+
 .wallet-connect-button {
   background: linear-gradient(135deg, #00D2E9, #FF5CAA);
   color: white;

@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet } from 'lucide-react';
+import { useAccount } from 'wagmi';
+import { authService } from '../services/auth';
 
 const ConnectWallet: React.FC = () => {
+  const { address, isConnected } = useAccount();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (isConnected && address) {
+          await authService.ensureAuthenticated(address);
+        }
+      } catch (e) {
+        console.warn('Auth failed:', e);
+      }
+    })();
+  }, [isConnected, address]);
+
   return (
     <ConnectButton.Custom>
       {({

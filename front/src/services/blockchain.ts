@@ -1,6 +1,7 @@
 import { deployContract, waitForTransactionReceipt, getAccount } from '@wagmi/core';
 import { config } from '../lib/wagmi';
 import { log } from '../utils';
+const API_BASE = import.meta.env.VITE_COMPILER_API_URL || 'http://localhost:3001';
 
 export interface DeploymentParams {
   bytecode: string;
@@ -56,11 +57,28 @@ export class BlockchainService {
           gasUsed: receipt.gasUsed.toString()
         });
 
-        return {
+        const result: DeploymentResult = {
           success: true,
           txHash: receipt.transactionHash,
           contractAddress: receipt.contractAddress || undefined
         };
+        try {
+          // fire-and-forget record deployment
+          fetch(`${API_BASE}/api/deployments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              address: account.address,
+              mode: 'normal',
+              contractId: 'unknown',
+              contractName: 'Unknown',
+              rarity: 'common',
+              txHash: result.txHash,
+              contractAddress: result.contractAddress
+            })
+          }).catch(() => {});
+        } catch {}
+        return result;
       } else {
         log.error('Transaction failed:', receipt);
         return {
