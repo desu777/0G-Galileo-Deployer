@@ -508,16 +508,27 @@ h1 {
 }
 
 .spin-button.spinning {
-  background: linear-gradient(135deg, #666, #888);
+  background: linear-gradient(135deg, #5b32c7, #7b3ff0);
+  position: relative;
+  overflow: hidden;
+}
+
+.spin-button.spinning::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-120%);
+  animation: shine 1.2s linear infinite;
 }
 
 .spinner {
-  width: 24px;
-  height: 24px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
   border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s linear infinite;
+  animation: btnSpin 0.8s linear infinite;
 }
 
 .continue-button {
@@ -1234,6 +1245,20 @@ h1 {
 .drops-modal .chance-fill { height:100%; background: linear-gradient(90deg, #00D2E9, #FF5CAA); }
 .drops-modal .chance-text { color:#9999A5; font-weight:700; font-size:12px; }
 
+/* Leaderboard modal */
+.leaderboard-modal .modal-title { display:flex; align-items:center; justify-content:center; gap:8px; }
+.lb-table { display:flex; flex-direction:column; gap:8px; }
+.lb-row { display:grid; grid-template-columns: 40px 1fr 80px 1fr; align-items:center; gap:12px; padding:10px 12px; background: rgba(18,18,24,.9); border:1px solid rgba(60,75,95,.3); border-radius:10px; }
+.lb-row-head { background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.15); font-weight:700; color:#E6E6E6; }
+.lb-rank { text-align:center; font-weight:800; color:#9999A5; }
+.lb-rank.top-1 { color:#FFD700; }
+.lb-rank.top-2 { color:#C0C0C0; }
+.lb-rank.top-3 { color:#CD7F32; }
+.lb-addr code { font-family: 'Courier New', monospace; color:#E6E6E6; }
+.lb-count { text-align:right; font-weight:700; color:#00D2E9; }
+.lb-bar { height:6px; background: rgba(255,255,255,.08); border-radius:999px; overflow:hidden; }
+.lb-bar-fill { height:100%; background: linear-gradient(90deg, #00D2E9, #FF5CAA); }
+
 .wallet-connect-button {
   background: linear-gradient(135deg, #00D2E9, #FF5CAA);
   color: white;
@@ -1401,9 +1426,14 @@ h1 {
   100% { box-shadow: 0 0 40px rgba(139, 92, 246, 1), 0 0 60px rgba(109, 40, 217, 0.6); }
 }
 
-@keyframes spin {
+@keyframes btnSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
 }
 
 @keyframes cpuPulse {

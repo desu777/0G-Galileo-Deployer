@@ -98,13 +98,19 @@ body.jaine-mode {
   opacity: 0.8;
 }
 
-.jaine-mode .social-links a {
-  color: #c084fc;
-  transition: color 0.3s ease;
+.jaine-mode .social-link {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #a6a6b0;
+  transition: all 0.4s ease;
 }
 
-.jaine-mode .social-links a:hover {
+.jaine-mode .social-link:hover {
   color: #d8b4fe;
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.18);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+  transform: translateY(-2px);
 }
 
 /* Wallet section in Jaine mode */

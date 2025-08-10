@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Rocket, RefreshCw, Sparkles, Star, Trophy, Gem } from 'lucide-react';
+import { X, Rocket, RefreshCw, Sparkles, Star, Trophy, Gem, Globe } from 'lucide-react';
 import { ContractType } from '../types';
 import { useMode } from '../contexts/ModeContext';
 
@@ -410,6 +410,32 @@ const ContractModal: React.FC<ContractModalProps> = ({
               {contract.rarity === 'legendary-ultra' && '0.1%'}
             </span>
           </div>
+
+          {mode === 'jaine' && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+              <a
+                href="https://x.com/Jaineon0G"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+                title="Follow JAINE on X (Twitter)"
+              >
+                {/* X icon inline to match Header XIcon */}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width={16} height={16} fill="currentColor">
+                  <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                </svg>
+              </a>
+              <a
+                href="https://test.jaine.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+                title="Open JAINE App"
+              >
+                <Globe size={16} />
+              </a>
+            </div>
+          )}
         </div>
 
         <div className="modal-footer">

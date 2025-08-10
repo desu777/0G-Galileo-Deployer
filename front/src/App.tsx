@@ -8,6 +8,7 @@ import Deployed from './components/Deployed';
 import Footer from './components/Footer';
 import ContractModal from './components/ContractModal';
 import DropRatesModal from './components/DropRatesModal';
+import { useState as useReactState } from 'react';
 import { ModeProvider, useMode } from './contexts/ModeContext';
 import ModeSelector from './components/ModeSelector';
 import { CONTRACT_TYPES, ACHIEVEMENT_MESSAGES } from './constants';
@@ -46,6 +47,8 @@ function AppContent() {
   const [deploymentError, setDeploymentError] = useState<string | null>(null);
   const [showContractModal, setShowContractModal] = useState(false);
   const [showRates, setShowRates] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<{ total: number; rows: Array<{ wallet_address: string; total: number }> } | null>(null);
 
   const stats: GameStats = {
     totalSpins,
@@ -63,6 +66,8 @@ function AppContent() {
   // Get contracts based on current mode
   const currentContracts = mode === 'jaine' ? JAINE_CONTRACT_TYPES : CONTRACT_TYPES;
   const currentAchievements = mode === 'jaine' ? JAINE_ACHIEVEMENT_MESSAGES : ACHIEVEMENT_MESSAGES;
+  const lbRows = (leaderboard?.rows || []) as Array<{ wallet_address: string; total: number }>;
+  const lbMax = Math.max(1, ...lbRows.map(r => r.total || 0));
 
   // Enhanced spin logic with combo system
   const spin = () => {
@@ -296,6 +301,23 @@ function AppContent() {
     spin();
   };
 
+  // Load leaderboard from backend
+  useEffect(() => {
+    if (!showLeaderboard) return;
+    (async () => {
+      try {
+        const base = import.meta.env.VITE_COMPILER_API_URL || 'http://localhost:3001';
+        const resSummary = await fetch(`${base}/api/stats/summary`);
+        const sumJson = await resSummary.json();
+        const resBoard = await fetch(`${base}/api/stats/leaderboard?limit=100`);
+        const boardJson = await resBoard.json();
+        setLeaderboard({ total: (sumJson?.data?.total || 0), rows: boardJson?.data || [] });
+      } catch {
+        setLeaderboard({ total: 0, rows: [] });
+      }
+    })();
+  }, [showLeaderboard]);
+
   return (
     <div className="container">
       <div id="particles-js" className="particles"></div>
@@ -339,6 +361,12 @@ function AppContent() {
             </svg>
             View Drop Rates
           </button>
+          <button className="secondary-button view-rates-btn" style={{ marginLeft: 12 }} onClick={() => setShowLeaderboard(true)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3h4v18H3V3zm7 6h4v12h-4V9zm7-4h4v16h-4V5z" fill="currentColor"/>
+            </svg>
+            Leaderboard
+          </button>
         </div>
 
         {deploymentStep === 'slot' && (
@@ -371,6 +399,38 @@ function AppContent() {
           contracts={currentContracts} 
           title={mode === 'jaine' ? 'Jaine Mode Drop Rates' : 'Classic Mode Drop Rates'}
         />
+
+        {showLeaderboard && (
+          <div className="modal-overlay" onClick={() => setShowLeaderboard(false)}>
+            <div className="modal-container leaderboard-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setShowLeaderboard(false)}>×</button>
+              <div className="modal-header">
+                <h2 className="modal-title">🏆 Top Deployers</h2>
+              </div>
+              <div className="modal-body">
+                <div className="drop-summary" style={{ justifyContent: 'space-between', marginBottom: 16 }}>
+                  <span>Total contracts deployed:</span>
+                  <strong>{leaderboard?.total ?? '—'}</strong>
+                </div>
+                <div className="lb-table">
+                  <div className="lb-row lb-row-head">
+                    <span>#</span>
+                    <span>Address</span>
+                    <span style={{ textAlign: 'right' }}>Deployed</span>
+                  </div>
+                  {lbRows.map((row, idx) => (
+                    <div key={idx} className="lb-row">
+                      <div className={`lb-rank ${idx < 3 ? `top-${idx + 1}` : ''}`}>{idx + 1}</div>
+                      <div className="lb-addr"><code>{row.wallet_address ? `${row.wallet_address.slice(0, 6)}...${row.wallet_address.slice(-4)}` : '—'}</code></div>
+                      <div className="lb-count">{row.total}</div>
+                      <div className="lb-bar"><div className="lb-bar-fill" style={{ width: `${Math.round((row.total || 0) / lbMax * 100)}%` }} /></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Enhanced configuration with better UX */}
         {deploymentStep === 'configure' && selectedContract && (
