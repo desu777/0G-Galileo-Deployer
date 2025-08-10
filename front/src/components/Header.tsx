@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({
         <ConnectWallet />
       </div>
       
-      {streak > 0 && (
+      {mode !== 'jaine' && streak > 0 && (
         <div className="streak-indicator">
           🔥 {streak} Win Streak! 🔥
         </div>

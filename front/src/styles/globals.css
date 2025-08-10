@@ -133,13 +133,13 @@
   position: absolute;
   top: -10px;
   right: -10px;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #000;
+  background: linear-gradient(135deg, #1a1a1a, #2a0f3a);
+  color: #E6E6E6;
   border-radius: 20px;
   padding: 5px 10px;
   font-size: 12px;
   font-weight: 700;
-  animation: comboGlow 1s infinite alternate;
+  animation: comboGlowViolet 1.5s infinite alternate;
 }
 
 h1 {
@@ -482,8 +482,8 @@ h1 {
 }
 
 .spin-button.combo {
-  background: linear-gradient(135deg, #FFD700, #FFA500, #FF0080);
-  animation: comboButton 1s infinite alternate;
+  background: linear-gradient(135deg, #1a1a1a, #2d1b69, #6d28d9);
+  animation: comboButtonViolet 1s infinite alternate;
 }
 
 .spin-button.wallet-required {
@@ -1296,6 +1296,11 @@ h1 {
   100% { box-shadow: 0 0 25px rgba(255, 215, 0, 1); }
 }
 
+@keyframes comboGlowViolet {
+  0% { box-shadow: 0 0 10px rgba(139, 92, 246, 0.6); }
+  100% { box-shadow: 0 0 25px rgba(139, 92, 246, 1); }
+}
+
 @keyframes rainbowText {
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
@@ -1352,6 +1357,11 @@ h1 {
 @keyframes comboButton {
   0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
   100% { box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 0, 128, 0.6); }
+}
+
+@keyframes comboButtonViolet {
+  0% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.6); }
+  100% { box-shadow: 0 0 40px rgba(139, 92, 246, 1), 0 0 60px rgba(109, 40, 217, 0.6); }
 }
 
 @keyframes spin {

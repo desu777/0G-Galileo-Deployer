@@ -289,6 +289,7 @@ function AppContent() {
   return (
     <div className="container">
       <div id="particles-js" className="particles"></div>
+      {mode === 'jaine' && <div className="dex-bg" />}
       
       {/* Floating particles */}
       {particles.map(particle => (
