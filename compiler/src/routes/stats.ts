@@ -9,9 +9,9 @@ statsRouter.post('/spin', (req, res) => {
   if (!address || !rarity) return res.status(400).json({ success: false, error: 'Missing address or rarity' });
   try {
     const updated = (require('../utils/db') as any).updateSpinMetrics(address, rarity);
-    res.json({ success: true, data: updated });
+    return res.json({ success: true, data: updated });
   } catch (e: any) {
-    res.status(400).json({ success: false, error: e?.message || 'Failed to update spin metrics' });
+    return res.status(400).json({ success: false, error: e?.message || 'Failed to update spin metrics' });
   }
 });
 
@@ -35,8 +35,8 @@ statsRouter.get('/user/:address', (req, res) => {
       SUM(CASE WHEN mode='jaine'  THEN 1 ELSE 0 END) AS jaine_count
     FROM deployments WHERE success=1 AND wallet_address = ?
   `).get(address);
-  const metrics = db.prepare('SELECT * FROM user_metrics WHERE wallet_address = ?').get(address) || {};
-  res.json({ success: true, data: { ...metrics, ...deploys } });
+  const metrics = db.prepare('SELECT * FROM user_metrics WHERE wallet_address = ?').get(address) as any || {};
+  res.json({ success: true, data: { ...(metrics as any), ...(deploys as any) } });
 });
 
 statsRouter.get('/leaderboard', (req, res) => {

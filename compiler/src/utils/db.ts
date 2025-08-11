@@ -10,7 +10,7 @@ if (!fs.existsSync(DB_DIR)) {
   fs.mkdirSync(DB_DIR, { recursive: true });
 }
 
-export const db = new Database(DB_PATH);
+export const db: Database.Database = new Database(DB_PATH);
 
 db.pragma('journal_mode = WAL');
 db.pragma('synchronous = NORMAL');
@@ -64,16 +64,16 @@ CREATE INDEX IF NOT EXISTS idx_metrics_wallet ON user_metrics(wallet_address);
 
 logger.success('SQLite initialized at ' + DB_PATH);
 
-export function getOrCreateUser(address: string) {
+export function getOrCreateUser(address: string): any {
   const wallet = address.toLowerCase();
-  const row = db.prepare('SELECT * FROM users WHERE wallet_address = ?').get(wallet);
+  const row = db.prepare('SELECT * FROM users WHERE wallet_address = ?').get(wallet) as any;
   if (row) {
     // ensure metrics row exists
     db.prepare('INSERT OR IGNORE INTO user_metrics (user_id, wallet_address) VALUES (?, ?)').run(row.id, wallet);
     return row;
   }
   const info = db.prepare('INSERT INTO users (wallet_address) VALUES (?)').run(wallet);
-  const created = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid as number);
+  const created = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid as number) as any;
   db.prepare('INSERT OR IGNORE INTO user_metrics (user_id, wallet_address) VALUES (?, ?)').run(created.id, wallet);
   return created;
 }
