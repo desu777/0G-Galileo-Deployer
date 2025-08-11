@@ -123,6 +123,9 @@ EOF
 # Budowanie aplikacji
 npm run build
 
+# Poprawka w vite.config.ts - dodanie allowed hosts
+# Edytuj plik vite.config.ts i dodaj 'deployer.desudev.xyz' do allowedHosts
+
 # Uruchomienie serwera preview przez PM2
 pm2 start npm --name "0g-frontend" -- run preview -- --port 3100 --host 0.0.0.0
 
@@ -241,7 +244,7 @@ sudo certbot certificates
 ### 9. Komendy Utrzymania
 
 ```bash
-# Restart aplikacji
+# Restart aplikacji (po zmianach w kodzie)
 pm2 restart 0g-compiler
 pm2 restart 0g-frontend
 

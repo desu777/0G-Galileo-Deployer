@@ -13,6 +13,9 @@ import { deploymentsRouter } from './routes/deployments';
 const app = express();
 const PORT = process.env.PORT || 3999;
 
+// Trust proxy (Nginx) - must be before rate limiting
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet());
 app.disable('x-powered-by');

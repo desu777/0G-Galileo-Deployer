@@ -15,6 +15,7 @@ export default defineConfig({
     strictPort: true,
     allowedHosts: [
       'deployer.desu0g.xyz',
+      'deployer.desudev.xyz',
       'localhost',
       '127.0.0.1'
     ]
