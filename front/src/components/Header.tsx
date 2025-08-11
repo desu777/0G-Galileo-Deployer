@@ -108,6 +108,18 @@ const Header: React.FC<HeaderProps> = ({
       
       <div className="powered-by">
         <span className="powered-text">powered by desu</span>
+        <img 
+          src="/desu.jpg" 
+          alt="desu" 
+          style={{ 
+            width: 24, 
+            height: 24, 
+            borderRadius: '50%', 
+            marginLeft: 8,
+            marginRight: 8,
+            verticalAlign: 'middle' 
+          }} 
+        />
         <div className="social-links">
           <a 
             href="https://x.com/nov3lolo" 
